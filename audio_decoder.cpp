@@ -20,7 +20,7 @@ AudioDecoder::~AudioDecoder() {
 int AudioDecoder::prepare() {
     mAudioClock = 0;
     mAudioPts = 0;
-    mFrame = avcodec_alloc_frame();
+    mFrame = av_frame_alloc();
 	if (mFrame == NULL) {
 		LOGE("avcodec_alloc_frame failed \n");
 		return -1;
@@ -41,7 +41,7 @@ int AudioDecoder::process(AVPacket *packet) {
 		LOGE("decode audio packet failed \n");
 	}
 
-	LOGD("packet dts: %lld = %lld; packet pts: %lld = %lld; frame pts: %lld", packet->dts, mFrame->pkt_dts, packet->pts, mFrame->pkt_pts, mFrame->pts);
+	LOGD("audio packet dts: %lld = %lld; packet pts: %lld = %lld; frame pts: %lld \n", packet->dts, mFrame->pkt_dts, packet->pts, mFrame->pkt_pts, mFrame->pts);
 
 	if (gotFrame) {
 		int size = av_samples_get_buffer_size(NULL, mFrame->channels,
@@ -55,7 +55,7 @@ int AudioDecoder::process(AVPacket *packet) {
 			mAudioClock += inc;
 		}
 
-		LOGD("output an audio frame, mAudioClock: %lf", mAudioClock);
+		LOGD("output an audio frame, mAudioClock: %lf \n", mAudioClock);
 
 		// conversion using swresample
 		if (mSwrContext == NULL) {
@@ -115,7 +115,7 @@ int AudioDecoder::decode(void* ptr) {
     }
 
 	// free the frame
-	avcodec_free_frame(&mFrame);
+	av_frame_free(&mFrame);
 	free(mSamples);
 	if (mSwrContext != NULL) {
 		swr_free(&mSwrContext);
@@ -123,5 +123,7 @@ int AudioDecoder::decode(void* ptr) {
 
 	LOGI("end of audio decoding \n");
 
+	// send NULL to indicate ending.
+	onDecoded(NULL, -1);
 	return 0;
 }

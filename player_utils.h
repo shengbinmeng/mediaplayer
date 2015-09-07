@@ -1,8 +1,6 @@
 #ifndef __PLAYER_UTILS_H__
 #define __PLAYER_UTILS_H__
 
-#include <stdint.h>
-#include <stdlib.h>
 #include <stdio.h>
 
 #define ENABLE_LOGD 1

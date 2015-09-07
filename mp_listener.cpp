@@ -1,59 +1,78 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <pthread.h>
-#include <unistd.h>
-#include <time.h>
+#include <string.h>
 #include "mp_listener.h"
 #include "player_utils.h"
 
 #define LOG_TAG "mp_listener"
 
 VideoFrame *gVF;
-pthread_mutex_t gVFMutex;
-
-static short *gShortArray;
-static int gDataArraySize;
+void *gAudioData;
+int gAudioDataSize;
 
 MediaPlayerListener::MediaPlayerListener() {
-    gShortArray = NULL;
-    gDataArraySize = 0;
+    gAudioData = NULL;
+    gAudioDataSize = 0;
 	gVF = NULL;
-	pthread_mutex_init(&gVFMutex, NULL);
 }
 
 MediaPlayerListener::~MediaPlayerListener() {
-
+	if (gVF != NULL) {
+    	free(gVF->yuv_data[0]);
+		free(gVF);
+		gVF = NULL;
+	}
+	if (gAudioData != NULL) {
+		free(gAudioData);
+		gAudioData = NULL;
+	}
 }
 
 void MediaPlayerListener::postEvent(int msg, int ext1, int ext2) {
-	LOGD("post a message: %d", msg);
+	LOGD("post a message: %d \n", msg);
+	if (msg == 909) {
+		LOGI("end of playing \n");
+	}
 }
 
 int MediaPlayerListener::audioTrackWrite(void* data, int offset, int data_size) {
 	if (data == NULL) {
-		return -1;
+		return 1;
 	}
-	int size = data_size / 2;
-	if (gShortArray == NULL || gDataArraySize < size) {
-		gShortArray = (short*)malloc(size);
-		gDataArraySize = size;
+	if (data_size > gAudioDataSize) {
+		if (gAudioData != NULL) {
+			free(gAudioData);
+			gAudioData = NULL;
+		}
+		gAudioData = malloc(data_size);
+		gAudioDataSize = data_size;
 	}
-	LOGD("write to audio track: %d shorts \n", size);
+	memcpy(gAudioData, data, data_size);	
+	
+	LOGD("write to audio track: %d bytes \n", data_size);
+	// TODO: Actually write gAudioData.
+	
 	return 0;
 
 }
 
 int MediaPlayerListener::drawFrame(VideoFrame *vf) {
-	pthread_mutex_lock(&gVFMutex);
-	gVF = vf;
-	pthread_mutex_unlock(&gVFMutex);
-
+	if (vf == NULL) {
+		// Post the finish message.
+		postEvent(909, 0, 0);
+		return 1;
+	}
+	
 	if (gVF != NULL) {
 		free(gVF->yuv_data[0]);
 		free(gVF);
 		gVF = NULL;
-    }
+	}
+	gVF = vf;
     
-    LOGD("draw a frame: %lf \n", vf->pts);
+    LOGD("draw a frame: %lf \n", gVF->pts);
+    // TODO: Actually draw gVF.
+    
     return 0;
 }

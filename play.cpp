@@ -1,6 +1,5 @@
 #include "mediaplayer.h"
 #include "mp_listener.h"
-#include "player_utils.h"
 
 int main(int argc, char* argv[]) {
 
@@ -23,6 +22,11 @@ int main(int argc, char* argv[]) {
 		perror("wait for playing failed \n");
 		return 2;
 	}
+	
+	mp->stop();
+	
+	delete mp;
+	delete listener;
     
     return 0;
 }

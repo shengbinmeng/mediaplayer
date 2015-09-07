@@ -1,11 +1,8 @@
 // mediaplayer.cpp (along with other files it needs) : implements
-// a C++ media player
+// a C++ media player.
 
-#include <sys/types.h>
-#include <sys/time.h>
-#include <sys/stat.h>
 #include <unistd.h>
-#include <fcntl.h>
+#include <sys/time.h>
 #include "mediaplayer.h"
 
 extern "C" {
@@ -14,12 +11,14 @@ extern "C" {
 #include "libswscale/swscale.h"
 #include "libavutil/log.h"
 }
-
+	
 #define LOG_TAG "MediaPlayer"
 
-#define MAX_AP_QUEUE_SIZE (128)
-#define MAX_VP_QUEUE_SIZE (128)
-#define MAX_FRAME_QUEUE_SIZE 20
+#define USE_LENTHEVCDEC 0
+
+#define MAX_AP_QUEUE_SIZE (2 * 128)
+#define MAX_VP_QUEUE_SIZE (2 * 128)
+#define MAX_FRAME_QUEUE_SIZE 14
 #define TIMEOUT_MS 5000
 
 static MediaPlayer* sPlayer;
@@ -72,6 +71,7 @@ MediaPlayer::MediaPlayer() {
 
 	//initialize ffmpeg
 	av_register_all();
+	avformat_network_init();
 	av_log_set_callback(ffmpeg_log_callback);
 	av_init_packet(&mFlushPacket);
 	mFlushPacket.data = (uint8_t*) "FLUSH";
@@ -92,6 +92,7 @@ MediaPlayer::MediaPlayer() {
 MediaPlayer::~MediaPlayer() {
 	pthread_mutex_destroy(&mLock);
 	pthread_cond_destroy(&mCondition);
+	avformat_network_deinit();
 }
 
 int MediaPlayer::prepareAudio() {
@@ -157,6 +158,13 @@ int MediaPlayer::prepareVideo() {
 
 	// find and open video decoder
 	AVCodec* codec = avcodec_find_decoder(codec_ctx->codec_id);
+#if USE_LENTHEVCDEC
+	AVCodec* lenthevc_dec = avcodec_find_decoder_by_name("liblenthevc");
+	if (codec->id == lenthevc_dec->id) {
+		codec = lenthevc_dec;
+		LOGI("use lenthevcdec for HEVC decoding \n");
+	}
+#endif
 	if (codec == NULL) {
 		LOGE("find video decoder failed \n");
 		return -1;
@@ -196,6 +204,16 @@ int MediaPlayer::open(char* file) {
 	}
 
 	// retrieve stream information
+#if USE_LENTHEVCDEC
+	// for HEVC video, we should use lenthevc decoder to find stream info
+	if (mFormatContext->streams[AVMEDIA_TYPE_VIDEO]) {
+		AVCodec* lenthevc_dec = avcodec_find_decoder_by_name("liblenthevc");
+		AVCodec* codec = avcodec_find_decoder(mFormatContext->streams[AVMEDIA_TYPE_VIDEO]->codec->codec_id);
+		if (codec == NULL || codec->id == lenthevc_dec->id) {
+			mFormatContext->streams[AVMEDIA_TYPE_VIDEO]->codec->codec = lenthevc_dec;
+		}
+	}
+#endif
 	if (avformat_find_stream_info(mFormatContext, NULL) < 0) {
 		LOGE("av_find_stream_info failed \n");
 		return -1;
@@ -272,7 +290,9 @@ void MediaPlayer::audioOutput(void* buffer, int buffer_size) {
 
 // handler for receiving decoded video frames
 void MediaPlayer::videoOutput(AVFrame* frame, double pts) {
-
+	if (frame == NULL) {
+		return;
+	}
 	// allocate a video frame, copy data to it, and put it in the frame queue
 	VideoFrame *vf = (VideoFrame*) malloc(sizeof(VideoFrame));
 	if (vf == NULL) {
@@ -316,14 +336,13 @@ void MediaPlayer::renderVideo(void* ptr) {
 		}
 
 		VideoFrame *vf = NULL;
-		bool block = true;
-		// if video has been decoded, do not block queue, i.e. exit when queue is empty
-		if (mCurrentState == MEDIA_PLAYER_VIDEO_DECODED) {
-			block = false;
-		}
-		mFrameQueue.get(&vf, block);
+		mFrameQueue.get(&vf, false);
 		if (vf == NULL) {
-			break;
+		    if (mCurrentState == MEDIA_PLAYER_VIDEO_DECODED) {
+			    break;
+		    } else {
+			    continue;
+			}
 		}
 
 		int size = sPlayer->mFrameQueue.size();
@@ -342,7 +361,7 @@ void MediaPlayer::renderVideo(void* ptr) {
 		mFrameLastPTS = vf->pts;
 
 		double diff = 0;
-		if (mAudioStreamIndex != -1) {
+		if (mAudioClock != 0) {
 			double ref_clock = mAudioClock + delay;
 			diff = vf->pts - ref_clock;
 			LOGD("diff: %lf - %lf = %lf (%lld) \n", vf->pts, ref_clock, diff, (int64_t)(diff * 1000));
@@ -356,6 +375,9 @@ void MediaPlayer::renderVideo(void* ptr) {
 
 		sListener->drawFrame(vf);
 
+		if (mAudioClock == 0) {
+			mCurrentPosition += vf->pts * 1000;
+		}
 		// update information
 		struct timeval timeNow;
 		gettimeofday(&timeNow, NULL);
@@ -389,11 +411,16 @@ void MediaPlayer::renderVideo(void* ptr) {
 		LOGE("join decoding thread failed \n");
 	}
 	LOGI("end of rendering thread \n");
-
+	// send NULL to indicate ending.
+	sListener->drawFrame(NULL);
 	mCurrentState = MEDIA_PLAYER_PLAYBACK_COMPLETE;
 }
 
 void MediaPlayer::decodeMedia(void* ptr) {
+
+	av_seek_frame(mFormatContext, mAudioStreamIndex, 0, AVSEEK_FLAG_BACKWARD);
+	av_seek_frame(mFormatContext, mVideoStreamIndex, 0, AVSEEK_FLAG_BACKWARD);
+
 	if (mAudioStreamIndex != -1) {
 		AVStream* stream_audio = mFormatContext->streams[mAudioStreamIndex];
 		mAudioDecoder = new AudioDecoder(stream_audio);
@@ -409,6 +436,7 @@ void MediaPlayer::decodeMedia(void* ptr) {
 
 	AVPacket p, *packet = &p;
 	LOGI("begin parsing...\n");
+
 	while (mCurrentState != MEDIA_PLAYER_STOPPED && mCurrentState != MEDIA_PLAYER_STATE_ERROR) {
 
 		// seek
@@ -531,10 +559,10 @@ void MediaPlayer::decodeMedia(void* ptr) {
 	// after dispatching all packets, wait for the decoding and output of audio and video (two threads)
 	int ret = -1;
 	if (mVideoDecoder != NULL) {
-		LOGI("waiting for video thread \n");
+		LOGI("waiting for video decoder \n");
 		ret = mVideoDecoder->join();
 		if (ret != 0) {
-			LOGE("wait for video thread failed: %i \n", ret);
+			LOGE("wait for video decoder failed: %i \n", ret);
 		}
 	}
 	pthread_mutex_lock(&mLock);
@@ -542,10 +570,10 @@ void MediaPlayer::decodeMedia(void* ptr) {
 	pthread_mutex_unlock(&mLock);
 
 	if (mAudioDecoder != NULL) {
-		LOGI("waiting for audio thread \n");
+		LOGI("waiting for audio decoder \n");
 		ret = mAudioDecoder->join();
 		if (ret != 0) {
-			LOGE("wait for audio thread failed: %i \n", ret);
+			LOGE("wait for audio decoder failed: %i \n", ret);
 		}
 	}
 
@@ -559,8 +587,6 @@ void* MediaPlayer::startDecoding(void* ptr) {
 
 void* MediaPlayer::startRendering(void* ptr) {
 	sPlayer->renderVideo(ptr);
-	// tell the play activity to finish
-	sListener->postEvent(909, 0, 0);
 	return NULL;
 }
 
@@ -646,8 +672,9 @@ int MediaPlayer::stop() {
 	}
 
 	mFrameQueue.abort();
-	if (pthread_join(mRenderingThread, NULL) != 0) {
-		LOGE("join rendering thread failed \n");
+	int ret = pthread_join(mRenderingThread, NULL);
+	if (ret != 0 && ret != ESRCH) {
+		LOGE("something wrong when join rendering thread \n");
 	}
 
 	// free the decoders
@@ -720,15 +747,13 @@ int MediaPlayer::getAudioParams(int *params) {
 	} else {
 		params[0] = params[1] = params[2] = 0;
 	}
-
 	return 0;
 }
-
+	
 int MediaPlayer::wait() {
-    if (pthread_join(mRenderingThread, NULL) != 0) {
+	if (pthread_join(mRenderingThread, NULL) != 0) {
 		LOGE("join rendering thread failed \n");
 		return -1;
 	}
-	
 	return 0;
 }

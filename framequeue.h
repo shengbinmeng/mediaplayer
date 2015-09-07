@@ -1,9 +1,8 @@
 #ifndef __FRAMEQUEUE_H__
 #define __FRAMEQUEUE_H__
 
-#include <stdlib.h>
-#include <stdint.h>
 #include <pthread.h>
+#include <stdint.h>
 
 struct VideoFrame {
 	int width;

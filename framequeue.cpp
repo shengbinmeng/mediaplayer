@@ -1,5 +1,5 @@
 #include "framequeue.h"
-#include "player_utils.h"
+#include <stdlib.h>
 
 #define LOG_TAG "FrameQueue"
 

@@ -40,7 +40,6 @@ public:
 	int getCurrentPosition(int *msec);
 	int getDuration(int *msec);
 	int getAudioParams(int *params);
-	
 	int wait();
 
 private:

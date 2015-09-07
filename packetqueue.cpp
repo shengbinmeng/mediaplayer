@@ -90,7 +90,7 @@ int PacketQueue::get(AVPacket *pkt, bool block) {
 			}
 			mSize--;
 			*pkt = pl->pkt;
-			av_freep(&pl);
+			av_free(pl);
 			ret = 0;
 			break;
 		} else if (!block) {
