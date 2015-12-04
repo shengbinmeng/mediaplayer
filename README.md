@@ -1,1 +1,1 @@
-A Simple Media Player.
+A very simple media player.
