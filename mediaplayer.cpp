@@ -112,7 +112,7 @@ int MediaPlayer::prepareAudio() {
 		return -1;
 	}
 
-	// get a pointer to the codec context for the video stream
+	// get a pointer to the codec context for the audio stream
 	AVStream* stream = mFormatContext->streams[mAudioStreamIndex];
 	AVCodecContext* codec_ctx = stream->codec;
 	LOGI("audio codec id: %d \n", codec_ctx->codec_id);
@@ -120,7 +120,7 @@ int MediaPlayer::prepareAudio() {
 	av_get_sample_fmt_string(buffer, 128, codec_ctx->sample_fmt);
 	LOGI("sample rate: %d, format: %d (%s), channels: %d \n", codec_ctx->sample_rate, codec_ctx->sample_fmt, buffer, codec_ctx->channels);
 
-	AVCodec* codec = avcodec_find_decoder(codec_ctx->codec_id ? codec_ctx->codec_id : CODEC_ID_MP3);
+	AVCodec* codec = avcodec_find_decoder(codec_ctx->codec_id);
 	if (codec == NULL) {
 		LOGE("find audio decoder failed \n");
 		return -1;
