@@ -2,9 +2,9 @@
 #define __MEDIAPLAYER_H__
 
 #include <pthread.h>
-#include "audio_decoder.h"
-#include "video_decoder.h"
-#include "framequeue.h"
+#include "AudioDecoder.h"
+#include "VideoDecoder.h"
+#include "FrameQueue.h"
 #include "mp_listener.h"
 
 enum media_player_state {

@@ -22,7 +22,7 @@ public:
 private:
 	AVFrame* mFrame;
 	SwrContext *mSwrContext;
-    void* mSamples;
+	void* mSamples;
 	int prepare();
 	int decode(void* ptr);
 	int process(AVPacket *packet);

@@ -12,14 +12,14 @@ void *gAudioData;
 int gAudioDataSize;
 
 MediaPlayerListener::MediaPlayerListener() {
-    gAudioData = NULL;
-    gAudioDataSize = 0;
+	gAudioData = NULL;
+	gAudioDataSize = 0;
 	gVF = NULL;
 }
 
 MediaPlayerListener::~MediaPlayerListener() {
 	if (gVF != NULL) {
-    	free(gVF->yuv_data[0]);
+		free(gVF->yuv_data[0]);
 		free(gVF);
 		gVF = NULL;
 	}
@@ -70,9 +70,9 @@ int MediaPlayerListener::drawFrame(VideoFrame *vf) {
 		gVF = NULL;
 	}
 	gVF = vf;
-    
-    LOGD("draw a frame: %lf \n", gVF->pts);
-    // TODO: Actually draw gVF.
-    
-    return 0;
+	
+	LOGD("draw a frame: %lf \n", gVF->pts);
+	// TODO: Actually draw gVF.
+	
+	return 0;
 }

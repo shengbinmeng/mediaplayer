@@ -1,4 +1,4 @@
-#include "audio_decoder.h"
+#include "AudioDecoder.h"
 #include "player_utils.h"
 extern "C" {
 #include "libswresample/swresample.h"
@@ -18,20 +18,20 @@ AudioDecoder::~AudioDecoder() {
 
 
 int AudioDecoder::prepare() {
-    mAudioClock = 0;
-    mAudioPts = 0;
-    mFrame = av_frame_alloc();
+	mAudioClock = 0;
+	mAudioPts = 0;
+	mFrame = av_frame_alloc();
 	if (mFrame == NULL) {
 		LOGE("avcodec_alloc_frame failed \n");
 		return -1;
 	}
-    mSamples = malloc(MAX_AUDIO_FRAME_SIZE);
-    if (mSamples == NULL) {
+	mSamples = malloc(MAX_AUDIO_FRAME_SIZE);
+	if (mSamples == NULL) {
 		LOGE("allocate samples failed \n");
 		return -1;
-    }
-    mSwrContext = NULL;
-    return 0;
+	}
+	mSwrContext = NULL;
+	return 0;
 }
 
 int AudioDecoder::process(AVPacket *packet) {
@@ -64,10 +64,10 @@ int AudioDecoder::process(AVPacket *packet) {
 			if (mSwrContext == NULL) {
 				LOGE("allocate context failed \n");
 			}
-			av_opt_set_int(mSwrContext, "in_channel_layout",  mFrame->channel_layout, 0);
+			av_opt_set_int(mSwrContext, "in_channel_layout", mFrame->channel_layout, 0);
 			av_opt_set_int(mSwrContext, "out_channel_layout", mFrame->channel_layout, 0);
-			av_opt_set_int(mSwrContext, "in_sample_rate",     mFrame->sample_rate, 0);
-			av_opt_set_int(mSwrContext, "out_sample_rate",    mFrame->sample_rate, 0);
+			av_opt_set_int(mSwrContext, "in_sample_rate", mFrame->sample_rate, 0);
+			av_opt_set_int(mSwrContext, "out_sample_rate", mFrame->sample_rate, 0);
 			av_opt_set_sample_fmt(mSwrContext, "in_sample_fmt", (AVSampleFormat)mFrame->format, 0);
 			av_opt_set_sample_fmt(mSwrContext, "out_sample_fmt", AV_SAMPLE_FMT_S16,  0);
 			int ret = swr_init(mSwrContext);
@@ -82,37 +82,37 @@ int AudioDecoder::process(AVPacket *packet) {
 		}
 
 		// call handler for posting buffer to os audio driver
-	    onDecoded(mSamples, size);
+		onDecoded(mSamples, size);
 	}
 
-    return 0;
+	return 0;
 }
 
 int AudioDecoder::decode(void* ptr) {
-    AVPacket packet;
+	AVPacket packet;
 
-    while (mRunning) {
-        if (outqueue(&packet) != 0) {
-        	// aborted
-            mRunning = false;
-            continue;
-        }
-        if (memcmp(packet.data, "FLUSH", sizeof("FLUSH")) == 0) {
+	while (mRunning) {
+		if (outqueue(&packet) != 0) {
+			// aborted
+			mRunning = false;
+			continue;
+		}
+		if (memcmp(packet.data, "FLUSH", sizeof("FLUSH")) == 0) {
 			avcodec_flush_buffers(mStream->codec);
 			LOGD("FLUSH");
 			continue;
-        }
+		}
 
 		LOGD("out queue an audio packet; queue size: %d \n", this->queueSize());
-        if (process(&packet) != 0) {
+		if (process(&packet) != 0) {
 			LOGE("process audio packet failed \n");
 			mRunning = false;
 			continue;
-        }
+		}
 
-        // free the packet that was allocated by av_read_frame
-        av_free_packet(&packet);
-    }
+		// free the packet that was allocated by av_read_frame
+		av_free_packet(&packet);
+	}
 
 	// free the frame
 	av_frame_free(&mFrame);

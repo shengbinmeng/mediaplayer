@@ -1,38 +1,38 @@
-#include "audioqueue.h"
-#include "player_utils.h"
+#include "Queue.h"
 
-#define LOG_TAG "AudioQueue"
+#define LOG_TAG "Queue"
 
-AudioQueue::AudioQueue() {
+Queue::Queue() {
 	pthread_mutex_init(&mLock, NULL);
 	pthread_cond_init(&mCondition, NULL);
 	mFirst = NULL;
 	mLast = NULL;
 	mSize = 0;
-	mAbortRequest = false;
+	mAbort = false;
 }
 
-AudioQueue::~AudioQueue() {
+Queue::~Queue() {
 	flush();
 	pthread_mutex_destroy(&mLock);
 	pthread_cond_destroy(&mCondition);
 }
 
-int AudioQueue::size() {
+int Queue::size() {
 	pthread_mutex_lock(&mLock);
 	int size = mSize;
 	pthread_mutex_unlock(&mLock);
 	return size;
 }
 
-void AudioQueue::flush() {
+void Queue::flush() {
 	pthread_mutex_lock(&mLock);
 
-	AudioData *ad, *ad1;
-	for (ad = mFirst; ad != NULL; ad = ad1) {
-		ad1 = ad->next;
-		free(ad->pcm_data);
-		free(ad);
+	QueueItem *item = mFirst;
+	while (item != NULL) {
+		QueueItem *next = item->next;
+		free(item->data);
+		free(item);
+		item = next;
 	}
 
 	mLast = NULL;
@@ -42,17 +42,18 @@ void AudioQueue::flush() {
 	pthread_mutex_unlock(&mLock);
 }
 
-int AudioQueue::put(AudioData *ad) {
+int Queue::put(QueueItem *item) {
 	pthread_mutex_lock(&mLock);
 
 	if (mLast == NULL) {
-		mFirst = ad;
+		// The queue has no item. We are putting the first one.
+		mFirst = item;
 	} else {
-		mLast->next = ad;
+		mLast->next = item;
 	}
 
-	ad->next = NULL;
-	mLast = ad;
+	item->next = NULL;
+	mLast = item;
 	mSize++;
 
 	pthread_cond_signal(&mCondition);
@@ -60,44 +61,45 @@ int AudioQueue::put(AudioData *ad) {
 	return 0;
 }
 
-// return < 0 if aborted, 0 if got and > 0 if empty
-int AudioQueue::get(AudioData **ad, bool block) {
+int Queue::get(QueueItem **item, bool block) {
 	int ret = 0;
 
 	pthread_mutex_lock(&mLock);
 
-	for (;;) {
-		if (mAbortRequest) {
+	while (1) {
+		if (mAbort) {
 			ret = -1;
 			break;
 		}
 
-		*ad = mFirst;
-		if (*ad) {
-			mFirst = (*ad)->next;
+		if (mFirst) {
+			// The queue has items.
+			*item = mFirst;
+			mFirst = mFirst->next;
 			if (mFirst == NULL) {
-				//queue empty
+				// The queue becomes empty.
 				mLast = NULL;
 			}
 			mSize--;
-			ret = 0;
-			break;
-		} else if (!block) {
-			ret = 1;
 			break;
 		} else {
-			pthread_cond_wait(&mCondition, &mLock);
+			// The queue has no item.
+			if (!block) {
+				ret = -1;
+				break;
+			} else {
+				pthread_cond_wait(&mCondition, &mLock);
+			}
 		}
 	}
 
 	pthread_mutex_unlock(&mLock);
 	return ret;
-
 }
 
-void AudioQueue::abort() {
+void Queue::abort() {
 	pthread_mutex_lock(&mLock);
-	mAbortRequest = true;
+	mAbort = true;
 	pthread_cond_signal(&mCondition);
 	pthread_mutex_unlock(&mLock);
 }

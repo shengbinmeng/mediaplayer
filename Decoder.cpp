@@ -1,4 +1,4 @@
-#include "decoder.h"
+#include "Decoder.h"
 #include "player_utils.h"
 
 #define LOG_TAG "Decoder"
@@ -10,7 +10,7 @@ Decoder::Decoder(AVStream* stream) {
 }
 
 Decoder::~Decoder() {
-	free(mQueue);
+	delete mQueue;
 }
 
 int Decoder::enqueue(AVPacket* packet) {

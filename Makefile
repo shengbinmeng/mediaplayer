@@ -8,8 +8,8 @@ FFMPEG_LIB_DIR := /usr/local/lib
 #
 # Source files
 #
-SRCS := audio_decoder.cpp video_decoder.cpp decoder.cpp framequeue.cpp \
-		packetqueue.cpp thread.cpp mediaplayer.cpp mp_listener.cpp main.cpp
+SRCS := AudioDecoder.cpp VideoDecoder.cpp Decoder.cpp Queue.cpp FrameQueue.cpp \
+		PacketQueue.cpp Thread.cpp MediaPlayer.cpp mp_listener.cpp main.cpp
 
 play: $(SRCS)
 	g++ -g -O2 -I${FFMPEG_INCLUDE_DIR} -L${FFMPEG_LIB_DIR} -o $@ $^ -lavformat -lavcodec -lswresample -lavutil -pthread

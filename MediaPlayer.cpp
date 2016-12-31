@@ -3,7 +3,7 @@
 
 #include <unistd.h>
 #include <sys/time.h>
-#include "mediaplayer.h"
+#include "MediaPlayer.h"
 
 extern "C" {
 #include "libavcodec/avcodec.h"
@@ -306,7 +306,6 @@ void MediaPlayer::videoOutput(AVFrame* frame, double pts) {
 	vf->linesize_y = frame->linesize[0];
 	vf->linesize_uv = frame->linesize[1];
 	vf->pts = pts;
-	vf->next = NULL;
 	vf->yuv_data[0] = (uint8_t*) malloc(vf->height * (vf->linesize_y + vf->linesize_uv));
 	if (vf->yuv_data[0] == NULL) {
 		LOGE("yuv_data malloc failed \n");
@@ -341,10 +340,10 @@ void MediaPlayer::renderVideo(void* ptr) {
 		VideoFrame *vf = NULL;
 		mFrameQueue.get(&vf, false);
 		if (vf == NULL) {
-		    if (mCurrentState == MEDIA_PLAYER_VIDEO_DECODED) {
-			    break;
-		    } else {
-			    continue;
+			if (mCurrentState == MEDIA_PLAYER_VIDEO_DECODED) {
+				break;
+			} else {
+				continue;
 			}
 		}
 
