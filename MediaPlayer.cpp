@@ -56,6 +56,9 @@ MediaPlayer::MediaPlayer() {
 	mAudioDecoder = NULL;
 	mVideoDecoder = NULL;
 	mListener = NULL;
+	mFormatContext = NULL;
+	mAudioStreamIndex = -1;
+	mVideoStreamIndex = -1;
 
 	mDuration = 0;
 	mCurrentPosition = 0;
@@ -99,14 +102,12 @@ int MediaPlayer::prepareAudio() {
 	LOGI("prepareAudio \n");
 
 	// find the first audio stream
-	mAudioStreamIndex = -1;
 	for (int i = 0; i < mFormatContext->nb_streams; i++) {
 		if (mFormatContext->streams[i]->codec->codec_type == AVMEDIA_TYPE_AUDIO) {
 			mAudioStreamIndex = i;
 			break;
 		}
 	}
-
 	if (mAudioStreamIndex == -1) {
 		LOGI("no video stream \n");
 		return -1;
@@ -140,7 +141,6 @@ int MediaPlayer::prepareVideo() {
 	LOGI("prepareVideo \n");
 
 	// find the first video stream
-	mVideoStreamIndex = -1;
 	for (int i = 0; i < mFormatContext->nb_streams; i++) {
 		if (mFormatContext->streams[i]->codec->codec_type == AVMEDIA_TYPE_VIDEO) {
 			mVideoStreamIndex = i;
@@ -198,7 +198,6 @@ int MediaPlayer::open(char* file) {
 	LOGI("opening %s \n", file);
 
 	// open media file
-	mFormatContext = NULL;
 	int ret = avformat_open_input(&mFormatContext, file, NULL, NULL);
 	if (ret != 0) {
 		LOGE("avformat_open_input failed: %d, when open: %s \n", ret, file);
@@ -250,8 +249,9 @@ int MediaPlayer::close() {
 		avcodec_close(mFormatContext->streams[mVideoStreamIndex]->codec);
 	}
 
-	// close the video file
-	avformat_close_input(&mFormatContext);
+	if (mFormatContext != NULL) {
+		avformat_close_input(&mFormatContext);
+	}
 
 	LOGI("closed \n");
 	return 0;
@@ -677,8 +677,8 @@ int MediaPlayer::stop() {
 	}
 
 	// free the decoders
-	free(mAudioDecoder);
-	free(mVideoDecoder);
+	delete mAudioDecoder;
+	delete mVideoDecoder;
 
 	LOGI("stopped \n");
 
