@@ -1,7 +1,7 @@
 #ifndef __MP_LISTENER_H__
 #define __MP_LISTENER_H__
 
-#include "framequeue.h"
+#include "FrameQueue.h"
 
 class MediaPlayerListener {
 public:
