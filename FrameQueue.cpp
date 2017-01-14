@@ -26,7 +26,7 @@ void FrameQueue::flush() {
 int FrameQueue::put(VideoFrame *vf) {
 	QueueItem *item = (QueueItem *)malloc(sizeof(QueueItem));
 	if (item == NULL) {
-		LOGE("malloc queue item failed \n");
+		LOGE("malloc queue item failed\n");
 		return -1;
 	}
 	item->data = vf;
@@ -34,9 +34,9 @@ int FrameQueue::put(VideoFrame *vf) {
 	return 0;
 }
 
-int FrameQueue::get(VideoFrame **vf, bool block) {
+int FrameQueue::get(VideoFrame **vf, bool wait) {
 	QueueItem *item;
-	int ret = Queue::get(&item, block);
+	int ret = Queue::get(&item, wait);
 	if (ret == 0) {
 		*vf = (VideoFrame *)item->data;
 	}

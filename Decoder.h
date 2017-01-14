@@ -1,7 +1,6 @@
 #ifndef __DECODER_H__
 #define __DECODER_H__
 
-#include "thread.h"
 #include "packetqueue.h"
 #include "player_utils.h"
 extern "C" {
@@ -9,28 +8,37 @@ extern "C" {
 #include "libavformat/avformat.h"
 }
 
-class Decoder: public Thread {
+class Decoder {
 public:
 	Decoder(AVStream* stream);
 	~Decoder();
 
+	int start();
+	int stop();
+	int join();
+	void waitOnNotify();
+	void notify();
+	
 	int enqueue(AVPacket* packet);
-	int outqueue(AVPacket* packet);
 	int queueSize();
 	void flushQueue();
-	void stop();
 	void endQueue();
 
 protected:
 	PacketQueue* mQueue;
 	AVStream* mStream;
+	AVFrame* mFrame;
+	int dequeue(AVPacket* packet);
+	
+private:
+	static void* startThread(void* ptr);
+	pthread_t mThread;
+	pthread_mutex_t mLock;
+	pthread_cond_t mCondition;
 	bool mBlock;
-
-	virtual int prepare() = 0;
-	virtual int decode(void* ptr) = 0;
-	virtual int process(AVPacket *packet) = 0;
-
+	bool mRunning;
 	void run(void* ptr);
+	virtual int decode(AVPacket *packet) = 0;
 };
 
 #endif //DECODER_H

@@ -5,26 +5,13 @@
 #include "AudioDecoder.h"
 #include "VideoDecoder.h"
 #include "FrameQueue.h"
-#include "mp_listener.h"
-
-enum media_player_state {
-	MEDIA_PLAYER_STATE_ERROR = 0,
-	MEDIA_PLAYER_IDLE,
-	MEDIA_PLAYER_INITIALIZED,
-	MEDIA_PLAYER_PREPARED,
-	MEDIA_PLAYER_PARSED,
-	MEDIA_PLAYER_VIDEO_DECODED,
-	MEDIA_PLAYER_STARTED,
-	MEDIA_PLAYER_PAUSED,
-	MEDIA_PLAYER_STOPPED,
-	MEDIA_PLAYER_PLAYBACK_COMPLETE
-};
+#include "PlayerListener.h"
 
 class MediaPlayer {
 public:
 	MediaPlayer();
 	~MediaPlayer();
-	int setListener(MediaPlayerListener *listener);
+	int setListener(PlayerListener *listener);
 	int setThreadNumber(int num);
 	int setLoopPlay(int loop);
 	int open(char* file);
@@ -46,21 +33,24 @@ private:
 	int mThreadNumber;
 	int mLoopPlay;
 	int mNeedSeek;
+	int mDemuxed;
+	int mPause;
+	int mStop;
+	int mPrepared;
+
 	int mFrameCount;
 	double mTimeStart;
 	int mFrames;
 	double mTimeLast;
 	AVPacket mFlushPacket;
+	AVPacket mEndPacket;
 
 	pthread_mutex_t mLock;
-	pthread_cond_t mCondition;
 
-	media_player_state mCurrentState;
-
-	pthread_t mDecodingThread;
+	pthread_t mDemuxingThread;
 	pthread_t mRenderingThread;
 
-	MediaPlayerListener* mListener;
+	PlayerListener* mListener;
 	AVFormatContext* mFormatContext;
 	int mAudioStreamIndex;
 	int mVideoStreamIndex;
@@ -69,7 +59,7 @@ private:
 
 	int mVideoWidth;
 	int mVideoHeight;
-	FrameQueue mFrameQueue;
+	FrameQueue* mFrameQueue;
 
 	// in ms
 	int64_t mDuration;
@@ -84,10 +74,10 @@ private:
 	int prepareAudio();
 	int prepareVideo();
 
-	void decodeMedia(void* ptr);
+	void demuxMedia(void* ptr);
 	void renderVideo(void* ptr);
 
-	static void* startDecoding(void* ptr);
+	static void* startDemuxing(void* ptr);
 	static void* startRendering(void* ptr);
 
 	static void videoOutput(AVFrame* frame, double pts);

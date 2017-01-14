@@ -1,7 +1,7 @@
 #ifndef __VIDEO_DECODER_H__
 #define __VIDEO_DECODER_H__
 
-#include "decoder.h"
+#include "Decoder.h"
 
 typedef void (*VideoDecodingHandler)(AVFrame*, double);
 
@@ -12,13 +12,8 @@ public:
 
 	VideoDecodingHandler onDecoded;
 	double mVideoClock;
-
 private:
-	AVFrame* mFrame;
-
-	int prepare();
-	int decode(void* ptr);
-	int process(AVPacket *packet);
+	int decode(AVPacket *packet);
 };
 
 #endif

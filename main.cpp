@@ -1,31 +1,31 @@
+#include <unistd.h>
 #include "MediaPlayer.h"
-#include "mp_listener.h"
 
 int main(int argc, char* argv[]) {
 
-	if ( argc < 2 ) {
-		fprintf(stderr, "no input file!\n");
-		return 1;
+	if (argc < 2) {
+		printf("Usage: %s <input_file>\n", argv[0]);
+		exit(1);
 	}
 	char *filename = argv[1];
 	
-	MediaPlayer* mp = new MediaPlayer();
+	MediaPlayer* player = new MediaPlayer();
 	
-	// create new listener and give it to MediaPlayer
-	MediaPlayerListener* listener = new MediaPlayerListener();
-	mp->setListener(listener);
+	PlayerListener* listener = new PlayerListener();
+	player->setListener(listener);
 	
-	mp->open(filename);
-	mp->start();
+	player->open(filename);
+	player->start();
 	
-	if (mp->wait() != 0) {
-		perror("wait for playing failed \n");
-		return 2;
+	// Wait for the playing end.
+	while (!listener->mPlayingEnd) {
+		sleep(1);
 	}
 	
-	mp->stop();
+	player->stop();
+	player->close();
 	
-	delete mp;
+	delete player;
 	delete listener;
 	
 	return 0;

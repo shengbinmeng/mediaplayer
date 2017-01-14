@@ -26,7 +26,7 @@ void PacketQueue::flush() {
 int PacketQueue::put(AVPacket *pkt) {
 	QueueItem *item = (QueueItem *)malloc(sizeof(QueueItem));
 	if (item == NULL) {
-		LOGE("malloc queue item failed \n");
+		LOGE("malloc queue item failed\n");
 		return -1;
 	}
 	AVPacket *p = (AVPacket *)malloc(sizeof(AVPacket));
@@ -36,9 +36,9 @@ int PacketQueue::put(AVPacket *pkt) {
 	return 0;
 }
 
-int PacketQueue::get(AVPacket *pkt, bool block) {
+int PacketQueue::get(AVPacket *pkt, bool wait) {
 	QueueItem *item;
-	int ret = Queue::get(&item, block);
+	int ret = Queue::get(&item, wait);
 	if (ret == 0) {
 		AVPacket *p = (AVPacket *)item->data;
 		*pkt = *p;

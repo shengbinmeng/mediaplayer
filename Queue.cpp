@@ -61,7 +61,7 @@ int Queue::put(QueueItem *item) {
 	return 0;
 }
 
-int Queue::get(QueueItem **item, bool block) {
+int Queue::get(QueueItem **item, bool wait) {
 	int ret = 0;
 
 	pthread_mutex_lock(&mLock);
@@ -84,7 +84,7 @@ int Queue::get(QueueItem **item, bool block) {
 			break;
 		} else {
 			// The queue has no item.
-			if (!block) {
+			if (!wait) {
 				ret = -1;
 				break;
 			} else {

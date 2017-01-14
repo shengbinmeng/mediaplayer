@@ -19,7 +19,7 @@ public:
 	int put(QueueItem *item);
 
 	/* return < 0 if aborted, 0 if no packet and > 0 if packet.  */
-	int get(QueueItem **ad, bool block);
+	int get(QueueItem **item, bool wait);
 
 	int size();
 

@@ -1,16 +1,17 @@
-#ifndef __MP_LISTENER_H__
-#define __MP_LISTENER_H__
+#ifndef __PLAYERLISTENER_H__
+#define __PLAYERLISTENER_H__
 
 #include "FrameQueue.h"
 
-class MediaPlayerListener {
+class PlayerListener {
 public:
-	MediaPlayerListener();
-	~MediaPlayerListener();
+	PlayerListener();
+	~PlayerListener();
 	void postEvent(int msg, int ext1, int ext2);
 	int audioTrackWrite(void* data, int offset, int size);
 	int audioTrackFlush();
 	int drawFrame(VideoFrame* vf);
+	int mPlayingEnd;
 };
 
 #endif

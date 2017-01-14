@@ -11,7 +11,7 @@ class PacketQueue : public Queue
 public:
 	void flush();
 	int put(AVPacket *pkt);
-	int get(AVPacket *pkt, bool block);
+	int get(AVPacket *pkt, bool wait);
 };
 
 #endif

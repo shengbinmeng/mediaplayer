@@ -6,7 +6,7 @@
 #define ENABLE_LOGD 1
 
 #if ENABLE_LOGD
-#define LOGD(...)  printf(__VA_ARGS__)
+#define LOGD(...)  printf(LOG_TAG ": " __VA_ARGS__)
 #else
 #define LOGD(...)
 #endif
