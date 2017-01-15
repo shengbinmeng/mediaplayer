@@ -1,0 +1,322 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6C9D9E0D1E29FEAE00F4E930 /* MediaPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6C9D9DFC1E29FEAE00F4E930 /* MediaPlayer.cpp */; };
+		6C9D9E0E1E29FEAE00F4E930 /* PlayerListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6C9D9DFD1E29FEAE00F4E930 /* PlayerListener.cpp */; };
+		6C9D9E0F1E29FEAE00F4E930 /* AudioDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6C9D9DFE1E29FEAE00F4E930 /* AudioDecoder.cpp */; };
+		6C9D9E101E29FEAE00F4E930 /* VideoDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6C9D9DFF1E29FEAE00F4E930 /* VideoDecoder.cpp */; };
+		6C9D9E111E29FEAE00F4E930 /* Decoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6C9D9E011E29FEAE00F4E930 /* Decoder.cpp */; };
+		6C9D9E121E29FEAE00F4E930 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6C9D9E021E29FEAE00F4E930 /* main.cpp */; };
+		6C9D9E131E29FEAE00F4E930 /* Queue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6C9D9E061E29FEAE00F4E930 /* Queue.cpp */; };
+		6C9D9E141E29FEAE00F4E930 /* PacketQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6C9D9E071E29FEAE00F4E930 /* PacketQueue.cpp */; };
+		6C9D9E151E29FEAE00F4E930 /* FrameQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6C9D9E0B1E29FEAE00F4E930 /* FrameQueue.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		6C9D9DEF1E29FE6600F4E930 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		6C9D9DF11E29FE6600F4E930 /* mediaplayer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mediaplayer; sourceTree = BUILT_PRODUCTS_DIR; };
+		6C9D9DFB1E29FEAE00F4E930 /* MediaPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediaPlayer.h; sourceTree = SOURCE_ROOT; };
+		6C9D9DFC1E29FEAE00F4E930 /* MediaPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MediaPlayer.cpp; sourceTree = SOURCE_ROOT; };
+		6C9D9DFD1E29FEAE00F4E930 /* PlayerListener.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayerListener.cpp; sourceTree = SOURCE_ROOT; };
+		6C9D9DFE1E29FEAE00F4E930 /* AudioDecoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioDecoder.cpp; sourceTree = SOURCE_ROOT; };
+		6C9D9DFF1E29FEAE00F4E930 /* VideoDecoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VideoDecoder.cpp; sourceTree = SOURCE_ROOT; };
+		6C9D9E001E29FEAE00F4E930 /* Decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Decoder.h; sourceTree = SOURCE_ROOT; };
+		6C9D9E011E29FEAE00F4E930 /* Decoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Decoder.cpp; sourceTree = SOURCE_ROOT; };
+		6C9D9E021E29FEAE00F4E930 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = SOURCE_ROOT; };
+		6C9D9E031E29FEAE00F4E930 /* AudioDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioDecoder.h; sourceTree = SOURCE_ROOT; };
+		6C9D9E041E29FEAE00F4E930 /* VideoDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoDecoder.h; sourceTree = SOURCE_ROOT; };
+		6C9D9E051E29FEAE00F4E930 /* PlayerListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerListener.h; sourceTree = SOURCE_ROOT; };
+		6C9D9E061E29FEAE00F4E930 /* Queue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Queue.cpp; sourceTree = SOURCE_ROOT; };
+		6C9D9E071E29FEAE00F4E930 /* PacketQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PacketQueue.cpp; sourceTree = SOURCE_ROOT; };
+		6C9D9E081E29FEAE00F4E930 /* PacketQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketQueue.h; sourceTree = SOURCE_ROOT; };
+		6C9D9E091E29FEAE00F4E930 /* Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Queue.h; sourceTree = SOURCE_ROOT; };
+		6C9D9E0A1E29FEAE00F4E930 /* player_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = player_utils.h; sourceTree = SOURCE_ROOT; };
+		6C9D9E0B1E29FEAE00F4E930 /* FrameQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FrameQueue.cpp; sourceTree = SOURCE_ROOT; };
+		6C9D9E0C1E29FEAE00F4E930 /* FrameQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FrameQueue.h; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6C9D9DEE1E29FE6600F4E930 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6C9D9DE81E29FE6600F4E930 = {
+			isa = PBXGroup;
+			children = (
+				6C9D9DF31E29FE6600F4E930 /* mediaplayer */,
+				6C9D9DF21E29FE6600F4E930 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6C9D9DF21E29FE6600F4E930 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6C9D9DF11E29FE6600F4E930 /* mediaplayer */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6C9D9DF31E29FE6600F4E930 /* mediaplayer */ = {
+			isa = PBXGroup;
+			children = (
+				6C9D9DFE1E29FEAE00F4E930 /* AudioDecoder.cpp */,
+				6C9D9E031E29FEAE00F4E930 /* AudioDecoder.h */,
+				6C9D9E011E29FEAE00F4E930 /* Decoder.cpp */,
+				6C9D9E001E29FEAE00F4E930 /* Decoder.h */,
+				6C9D9E0B1E29FEAE00F4E930 /* FrameQueue.cpp */,
+				6C9D9E0C1E29FEAE00F4E930 /* FrameQueue.h */,
+				6C9D9E021E29FEAE00F4E930 /* main.cpp */,
+				6C9D9DFC1E29FEAE00F4E930 /* MediaPlayer.cpp */,
+				6C9D9DFB1E29FEAE00F4E930 /* MediaPlayer.h */,
+				6C9D9E071E29FEAE00F4E930 /* PacketQueue.cpp */,
+				6C9D9E081E29FEAE00F4E930 /* PacketQueue.h */,
+				6C9D9E0A1E29FEAE00F4E930 /* player_utils.h */,
+				6C9D9DFD1E29FEAE00F4E930 /* PlayerListener.cpp */,
+				6C9D9E051E29FEAE00F4E930 /* PlayerListener.h */,
+				6C9D9E061E29FEAE00F4E930 /* Queue.cpp */,
+				6C9D9E091E29FEAE00F4E930 /* Queue.h */,
+				6C9D9DFF1E29FEAE00F4E930 /* VideoDecoder.cpp */,
+				6C9D9E041E29FEAE00F4E930 /* VideoDecoder.h */,
+			);
+			path = mediaplayer;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6C9D9DF01E29FE6600F4E930 /* mediaplayer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6C9D9DF81E29FE6600F4E930 /* Build configuration list for PBXNativeTarget "mediaplayer" */;
+			buildPhases = (
+				6C9D9DED1E29FE6600F4E930 /* Sources */,
+				6C9D9DEE1E29FE6600F4E930 /* Frameworks */,
+				6C9D9DEF1E29FE6600F4E930 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = mediaplayer;
+			productName = mediaplayer;
+			productReference = 6C9D9DF11E29FE6600F4E930 /* mediaplayer */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6C9D9DE91E29FE6600F4E930 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0820;
+				ORGANIZATIONNAME = "Shengbin Meng";
+				TargetAttributes = {
+					6C9D9DF01E29FE6600F4E930 = {
+						CreatedOnToolsVersion = 8.2;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 6C9D9DEC1E29FE6600F4E930 /* Build configuration list for PBXProject "mediaplayer" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 6C9D9DE81E29FE6600F4E930;
+			productRefGroup = 6C9D9DF21E29FE6600F4E930 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6C9D9DF01E29FE6600F4E930 /* mediaplayer */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6C9D9DED1E29FE6600F4E930 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6C9D9E131E29FEAE00F4E930 /* Queue.cpp in Sources */,
+				6C9D9E0F1E29FEAE00F4E930 /* AudioDecoder.cpp in Sources */,
+				6C9D9E0E1E29FEAE00F4E930 /* PlayerListener.cpp in Sources */,
+				6C9D9E121E29FEAE00F4E930 /* main.cpp in Sources */,
+				6C9D9E101E29FEAE00F4E930 /* VideoDecoder.cpp in Sources */,
+				6C9D9E151E29FEAE00F4E930 /* FrameQueue.cpp in Sources */,
+				6C9D9E141E29FEAE00F4E930 /* PacketQueue.cpp in Sources */,
+				6C9D9E0D1E29FEAE00F4E930 /* MediaPlayer.cpp in Sources */,
+				6C9D9E111E29FEAE00F4E930 /* Decoder.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		6C9D9DF61E29FE6600F4E930 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		6C9D9DF71E29FE6600F4E930 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		6C9D9DF91E29FE6600F4E930 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_LDFLAGS = (
+					"-lavformat",
+					"-lavcodec",
+					"-lswresample",
+					"-lavutil",
+					"-pthread",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		6C9D9DFA1E29FE6600F4E930 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_LDFLAGS = (
+					"-lavformat",
+					"-lavcodec",
+					"-lswresample",
+					"-lavutil",
+					"-pthread",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6C9D9DEC1E29FE6600F4E930 /* Build configuration list for PBXProject "mediaplayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6C9D9DF61E29FE6600F4E930 /* Debug */,
+				6C9D9DF71E29FE6600F4E930 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6C9D9DF81E29FE6600F4E930 /* Build configuration list for PBXNativeTarget "mediaplayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6C9D9DF91E29FE6600F4E930 /* Debug */,
+				6C9D9DFA1E29FE6600F4E930 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6C9D9DE91E29FE6600F4E930 /* Project object */;
+}
