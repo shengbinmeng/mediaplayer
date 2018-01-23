@@ -1,7 +1,7 @@
 #ifndef __DECODER_H__
 #define __DECODER_H__
 
-#include "packetqueue.h"
+#include "PacketQueue.h"
 #include "player_utils.h"
 extern "C" {
 #include "libavcodec/avcodec.h"
