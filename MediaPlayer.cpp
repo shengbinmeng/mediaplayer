@@ -690,7 +690,7 @@ int MediaPlayer::seekTo(int msec) {
 }
 
 int MediaPlayer::getAudioParams(int *params) {
-	if (mPrepared || !params) {
+	if (!mPrepared || !params) {
 		return -1;
 	}
 	if (mAudioStreamIndex != -1) {
